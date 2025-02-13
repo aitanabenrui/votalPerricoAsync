@@ -1,69 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="./api.js"></script>
-    <title>VotalPerrico</title>
-    <link rel="icon" href="images/12638.png">
-</head>
-<body>
-    <h1>🐶 Votalperrico 🐶</h1>
-    <!-- Botones para agregar perritos -->
-    <div id="form" class="formul">
-        <button class="button_form" id="add-1-perrico">Añadir 1 perrico más</button>
-        <button class="button_form" id="add-5-perrico">Añadir 5 perricos más</button>
-        <button class="button_form" id="add-1-perrico-start">Añadir 1 perrico más al principio</button>  
+    <title>Votalperrico</title>
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body>
+    <h1>Votalperrico</h1>
+    <p id="add-warning" style="display: none">Pulsa algún botón para añadir perricos</p>
+    <button id="add-1-perrico" class="add-button">Añadir 1 perrico al final</button>
+    <button id="add-1-perrico-start" class="add-button">Añadir 1 perrico al principio</button>
+    <button id="add-5-perricos" class="add-button">Añadir 5 perricos más</button>
+    <div class="filters">
+      <span> Filter by: </span>
+      <button id="like-filter">Preciosisimos ❤️</button>
+      <button id="dislike-filter">Feísimos 🤮</button>
     </div>
-    <!-- Botones para filtrar por votos -->
-    <div>
-        <button class="button_form_2" id="positive-votes">Perritos con votos +</button>
-        <button class="button_form_2" id="negative-votes">Perritos con votos -</button>
-        <button class="button_form_2" id="tied-votes">Perritos empatados</button>
-        <button class="button_form_2" id="reset-view">Mostrar todos de nuevo</button>
-    </div>
-
-<!-- popu a los x segundos -->
-    <div id="popup"><div class="popup">¡Pulsa algún botón para añadir perricos!</div></div>
-
-    <div id="dog-list">
-<!--
-        <div class="dogCard">
-            <img class="image" id="perro" alt="imagen de perro" src="images/descarga.jpeg">
-            <div class="cardVote" > 
-                <div class="voteCard">
-                    <p>😍</p>
-                    <button>Precioso</button> 
-                </div>
-                <div class="voteCard">
-                    <p>🤢</p>
-                    <button>Feísimo</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="dogCard" >
-            <img class="image" id="perro" alt="imagen de perro" src="images/descarga.jpeg">
-            <div class="cardVote" > 
-                <div class="voteCard">
-                    <p>😍</p>
-                    <button>Precioso</button>  
-                </div>
-                <div class="voteCard">
-                    <p>🤢</p>
-                    <button>Feísimo</button>
-                </div>
-            </div>
-        </div>
-        -->
-
-    </div>
-    
-    <script src="script.js"></script>
-</body>
-
+    <div id="dog-list"></div>
+  </body>
+  <script src="./index.js"></script>
 </html>
-
-
-<!--  -->
