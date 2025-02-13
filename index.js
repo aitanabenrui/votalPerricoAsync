@@ -62,7 +62,8 @@ function enableAllAddPerricoButtons() {
 }
 
 const addPerrico = async (addToStart) => {
-  const perricoImg = await getRandomDogImage();
+    const breed = document.querySelector('[name=breeds]').value;
+  const perricoImg = await getRandomDogImage(breed);
 
   if (addToStart) {
     perricosArray.unshift(perricoImg);
