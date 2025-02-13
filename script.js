@@ -169,10 +169,7 @@ const resetView = () => {
     dogCards.forEach((card) => { //para cada una de ellas vuelve a dejar el estilo original
         card.style.display = ''; // Mostrar todas las tarjetas, Restablece el estilo de la tarjeta
     });
-    //13-02-2025 si no hay perricos, habilitar el botón de añadir 
-    if(dogCards.length > 0){
     add1dog.disabled = false;
-    }
     add5dog.disabled = false;
     add1dogStart.disabled = false;
 };
@@ -195,9 +192,7 @@ const addPerrico = async (addToStart = false)=>{ //cambiará a true si apretamos
     renderPerrico(perricoImg, addToStart); // Re-renderizar la lista con la nueva imagen
     addSocialListeners(); //activa los eventos
 
-    //13-02-2025
-    // Desactivar botón al añadir el primer perrico
-    add1dog.disabled = true;
+
 };
 
 // Función para agregar 5 perricos: definimos una función asíncrona con un for que no dejará de ejecutarse hasta que i > 5, es decir que pushee al array perricosArrar 5 imágenes random
