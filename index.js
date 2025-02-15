@@ -1,5 +1,6 @@
 const perricosArray = ['https://images.dog.ceo/breeds/affenpinscher/n02110627_10439.jpg'];
 console.log(perricosArray);
+const select = document.querySelector("#breeds-picker"); //selecciona el desplegable donde elegir las razas
 
 const timeoutId = setTimeout(() => {
   document.querySelector('#add-warning').style.display = '';
@@ -15,7 +16,10 @@ window.onload = async()=>{
 for (let breed in dogBreeds){
     if(dogBreeds[breed].length === 0){
       breedNamesArray.push(breed);
-      
+      let option = document.createElement("option");
+      option.value = breed;
+      option.textContent = breed;
+      select.appendChild(option); //appendChild coloca los nuevos elementos al final del elemento padre
     } else {
       dogBreeds[breed].forEach((breedSurname)=>{
         breedNamesArray.push(`${breedSurname} ${breed}`)
