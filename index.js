@@ -7,6 +7,24 @@ const timeoutId = setTimeout(() => {
 // console.log(getRandomDogImage());
 
 const breedsPicker = document.querySelector("#breeds-picker");
+let breedNamesArray = [];
+
+window.onload = async()=>{
+  const dogBreeds = await getDogBreeds(); //esto es el objeto de razas de perros
+
+for (let breed in dogBreeds){
+    if(dogBreeds[breed].length === 0){
+      breedNamesArray.push(breed);
+      
+    } else {
+      dogBreeds[breed].forEach((breedSurname)=>{
+        breedNamesArray.push(`${breedSurname} ${breed}`)
+      })
+    }
+}
+
+console.log(breedNamesArray); 
+}
 
 // addPerrico();
 
