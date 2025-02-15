@@ -1,4 +1,4 @@
-const perricosArray = ['https://images.dog.ceo/breeds/affenpinscher/n02110627_10439.jpg'];
+const perricosArray = []; // Este array contendrá los objetos con {image: 'url', breed: 'raza'}
 console.log(perricosArray);
 const select = document.querySelector("#breeds-picker"); //selecciona el desplegable donde elegir las razas
 let selectedBreed = ''; //aquí guardaremos la raza seleccionada en el select
@@ -105,9 +105,17 @@ function enableAllAddPerricoButtons() {
 
 const addPerrico = async (addToStart) => {
     // const breed = document.querySelector('[name=breeds]').value; //selecciona el valor del select
-  const perricoImg = await getRandomDogImage(selectedBreed); //desde aquí llamamos a la función getRandomDogImage del archivo js api
+    const breed = selectedBreed; //raza de perro seleccionada
+    const perricoImg = await getRandomDogImage(breed); //desde aquí llamamos a la función getRandomDogImage del archivo js api
 //si selectedBreed está vacío ('') como dice en el archivo api.js, se pasará un link de foto de perro aleatorio
 
+//creamos un objeto con la imágen y la raza
+const perricoData = {
+  image: perricoImg,
+  breed: breed
+};
+
+ // Para añadir el perro al array, al principio o al final dependiendo de addToStart
   if (addToStart) {
     perricosArray.unshift(perricoImg);
   } else {
