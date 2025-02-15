@@ -11,8 +11,8 @@ const breedsPicker = document.querySelector("#breeds-picker");
 let breedNamesArray = [];
 
 //addEventListener para detectar el CAMBIO DE RAZA y actualizar la raza selccionada
-breedsPicker.addEventListener('change', (event)=>{
-  selectedBreed = event.target.value;
+breedsPicker.addEventListener('change', (event)=>{ //función anónima que se ejecuta cuando el valor de un elemento del selct cambia.
+  selectedBreed = event.target.value; //evnt.target se refiere al elemento que disparó el evento y value es el valor del elemento targeteado
   console.log(selectedBreed) //vemos si se actualiza
 }) //una vez cambiada la raza usaremos esta variable para pasarsela a getRandomDogImage
 
