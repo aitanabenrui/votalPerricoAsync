@@ -6,6 +6,8 @@ const timeoutId = setTimeout(() => {
 }, 3000);
 // console.log(getRandomDogImage());
 
+const breedsPicker = document.querySelector("#breeds-picker");
+
 // addPerrico();
 
 function clearWarningMessage() {
@@ -49,7 +51,7 @@ function renderPerricoArray() {
   addSocialListeners();
 }
 
-function disableAllAddPerricoButtons() {
+function disableAllAddPerricoButtons() { //deshabilita todos los botones de añadir perritos, esto es para que se deshabiliten hasta que se carguen todas las imágenes
   document.querySelectorAll('.add-button').forEach((buttonNode) => {
     buttonNode.disabled = true;
   });
@@ -105,12 +107,12 @@ const addPerrico = async (addToStart) => {
   });
 };
 
-document.querySelector('#add-1-perrico').addEventListener('click', async function () {
+document.querySelector('#add-1-perrico').addEventListener('click', async function () { //debe ser asincrona la función porque necesitamos un await, esto funciona porque addPerrico() también es asíncrona
   clearWarningMessage();
-
-  disableAllAddPerricoButtons();
-  await addPerrico();
-  enableAllAddPerricoButtons();
+//igual para todos los botones, debemos añadir un await antes de volver a activar el botón
+  disableAllAddPerricoButtons(); //al clickar el botón de añadir 1 perrito que se deshabiliten todos los botones
+  await addPerrico(); //que llame a addPerrico
+  enableAllAddPerricoButtons(); //que vuelva a habilitar los botones después de que addPerrico se haya ejecutado y haya emitido una respuesta
 });
 
 document.querySelector('#add-1-perrico-start').addEventListener('click', async function () {
@@ -125,7 +127,7 @@ document.querySelector('#add-5-perricos').addEventListener('click', async functi
   clearWarningMessage();
 
   disableAllAddPerricoButtons();
-  await Promise.all([addPerrico(), addPerrico(), addPerrico(), addPerrico(), addPerrico()]);
+  await Promise.all([addPerrico(), addPerrico(), addPerrico(), addPerrico(), addPerrico()]); //esto hace que se ejecuten todas las llamadas a la función a la vez, y que no siga l código hasta que todas se ejecuten
   enableAllAddPerricoButtons();
 });
 
