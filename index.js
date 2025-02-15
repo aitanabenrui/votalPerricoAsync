@@ -32,6 +32,7 @@ for (let breed in dogBreeds){
         breedNamesArray.push(`${breedSurname} ${breed}`);
         let option = document.createElement("option"); //crea un elmento option con value breedFullName
         option.value = breedFullName;
+        option.textContent = `${breedSurname} ${breed}`;
         optgroup.appendChild(option); //se añade la etiqueta option a optgroup
       });
       select.appendChild(optgroup); //una vez añadidas todas las subrazas al padre optgroup, este se añad al padre "select"
@@ -39,7 +40,7 @@ for (let breed in dogBreeds){
 }
 
 console.log(breedNamesArray); 
-}
+};
 
 // addPerrico();
 
