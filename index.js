@@ -10,11 +10,11 @@ const timeoutId = setTimeout(() => {
 const breedsPicker = document.querySelector("#breeds-picker");
 let breedNamesArray = [];
 
-//addEventListener para detectar el cambio de raza y actualizar la raza selccionada
+//addEventListener para detectar el CAMBIO DE RAZA y actualizar la raza selccionada
 breedsPicker.addEventListener('change', (event)=>{
   selectedBreed = event.target.value;
   console.log(selectedBreed) //vemos si se actualiza
-})
+}) //una vez cambiada la raza usaremos esta variable para pasarsela a getRandomDogImage
 
 window.onload = async()=>{
   const dogBreeds = await getDogBreeds(); //esto es el objeto de razas de perros
@@ -104,8 +104,9 @@ function enableAllAddPerricoButtons() {
 }
 
 const addPerrico = async (addToStart) => {
-    const breed = document.querySelector('[name=breeds]').value;
-  const perricoImg = await getRandomDogImage(breed);
+    // const breed = document.querySelector('[name=breeds]').value; //selecciona el valor del select
+  const perricoImg = await getRandomDogImage(selectedBreed); //desde aquí llamamos a la función getRandomDogImage del archivo js api
+//si selectedBreed está vacío ('') como dice en el archivo api.js, se pasará un link de foto de perro aleatorio
 
   if (addToStart) {
     perricosArray.unshift(perricoImg);
