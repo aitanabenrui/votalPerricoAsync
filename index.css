@@ -39,20 +39,3 @@ body {
     background: #3661d5;
     color: white;
   }
-
-  /* Estilo para el menú flotante */
-  .hidden {
-    display: none;
-  }
-  
-  #floating-menu {
-    position: absolute;
-    background: white;
-    border: 1px solid black;
-    padding: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    max-width: 200px;
-    font-size: 14px;
-  }
-  
