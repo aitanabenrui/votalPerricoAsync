@@ -21,9 +21,20 @@ for (let breed in dogBreeds){
       option.textContent = breed;
       select.appendChild(option); //appendChild coloca los nuevos elementos al final del elemento padre
     } else {
+      let optgroup = document.createElement("optgroup"); //crae el contenedor optgroup con label breed y valu breed
+      optgroup.label = breed; //aparecrá el nombre de la raza principal en la ventana desplegable
+      optgroup.value = breed; //lo mismo para el atributo value
+
+      //dentro del forEach metermos cada option que tenga la raza en concreto
       dogBreeds[breed].forEach((breedSurname)=>{
-        breedNamesArray.push(`${breedSurname} ${breed}`)
-      })
+
+        const breedFullName = `${breedSurname}--${breed}`;
+        breedNamesArray.push(`${breedSurname} ${breed}`);
+        let option = document.createElement("option"); //crea un elmento option con value breedFullName
+        option.value = breedFullName;
+        optgroup.appendChild(option); //se añade la etiqueta option a optgroup
+      });
+      select.appendChild(optgroup); //una vez añadidas todas las subrazas al padre optgroup, este se añad al padre "select"
     }
 }
 
