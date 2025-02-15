@@ -1,14 +1,20 @@
 const perricosArray = ['https://images.dog.ceo/breeds/affenpinscher/n02110627_10439.jpg'];
 console.log(perricosArray);
 const select = document.querySelector("#breeds-picker"); //selecciona el desplegable donde elegir las razas
+let selectedBreed = ''; //aquí guardaremos la raza seleccionada en el select
 
 const timeoutId = setTimeout(() => {
   document.querySelector('#add-warning').style.display = '';
 }, 3000);
-// console.log(getRandomDogImage());
 
 const breedsPicker = document.querySelector("#breeds-picker");
 let breedNamesArray = [];
+
+//addEventListener para detectar el cambio de raza y actualizar la raza selccionada
+breedsPicker.addEventListener('change', (event)=>{
+  selectedBreed = event.target.value;
+  console.log(selectedBreed) //vemos si se actualiza
+})
 
 window.onload = async()=>{
   const dogBreeds = await getDogBreeds(); //esto es el objeto de razas de perros
