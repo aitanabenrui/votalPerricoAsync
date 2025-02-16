@@ -61,7 +61,9 @@ function addSocialListeners() {
     buttonNode.addEventListener('click', function () {
       const hermanico = buttonNode.previousElementSibling;
       const likeCountNode = hermanico.querySelector('.like-count');
-      likeCountNode.innerText = Number(likeCountNode.innerText) + 1;
+      const perricoData = getPerricoDataFromNode(buttonNode);  // Función para obtener el objeto perricoData
+      perricoData.likes += 1;  // Incrementa el contador de likes
+      likeCountNode.innerText = perricoData.likes;  // Actualiza el contador en el DOM
     });
   });
 
@@ -69,7 +71,9 @@ function addSocialListeners() {
     buttonNode.addEventListener('click', function () {
       console.log(buttonNode.closest('.card'));
       const likeCountNode = buttonNode.closest('.card').querySelector('.dislike-count');
-      likeCountNode.innerText = Number(likeCountNode.innerText) + 1;
+      const perricoData = getPerricoDataFromNode(buttonNode);  // Función para obtener el objeto perricoData
+      perricoData.dislikes += 1;  // Incrementa el contador de dislikes
+      likeCountNode.innerText = perricoData.dislikes;  // Actualiza el contador en el DOM
     });
   });
 }
@@ -131,7 +135,7 @@ const renderFilteredPerricos = (filteredPerricos) =>{ // a esta función se le p
     card.innerHTML = `
     <img src="${perricoData.image}" alt="Perro" />
     <br />
-    <p><span class="like-count"></span>❤️ <span class="dislike-count"></span>🤮</p>
+    <p><span class="like-count">${perricoData.likes}</span>❤️ <span class="dislike-count">${perricoData.dislikes}</span>🤮</p>
     <button class="like">Preciosísimo</button> <button class="dislike">Feísisimo</button>`;
 
     dogList.appendChild(card);
@@ -150,7 +154,9 @@ const addPerrico = async (addToStart) => {
 //creamos un objeto con la imágen y la raza
 const perricoData = {
   image: perricoImg,
-  breed: breed
+  breed: breed,
+  likes: 0, //contador de likes
+  dislikes: 0 //contador de dislikes
 };
 
  // Para añadir el objeto perro al array, al principio o al final dependiendo de addToStart
@@ -169,9 +175,9 @@ const perricoData = {
   perricoCardElement.style.display = isAnyFilterSelected ? 'none' : '';
 
   perricoCardElement.innerHTML = `
-  <img src="${perricoImg}" alt="Perro" />
+  <img src="${perricoData.image}" alt="Perro" />
   <br />
-  <p><span class="like-count"></span>❤️ <span class="dislike-count"></span>🤮</p>
+  <p><span class="like-count">${perricoData.likes}</span>❤️ <span class="dislike-count">${perricoData.dislikes}</span>🤮</p>
   <button class="like">Preciosísimo</button> <button class="dislike">Feísisimo</button>`;
 
   if (addToStart) {
@@ -183,14 +189,16 @@ const perricoData = {
   const likeButton = perricoCardElement.querySelector('.like');
 
   likeButton.addEventListener('click', function () {
+    perricoData.likes++;
     const likeCountNode = perricoCardElement.querySelector('.like-count');
-    likeCountNode.innerText = Number(likeCountNode.innerText) + 1;
+    likeCountNode.innerText = perricoData.likes;
   });
 
   const dislikeButton = perricoCardElement.querySelector('.dislike');
   dislikeButton.addEventListener('click', function () {
+    perricoData.dislikes++;
     const likeCountNode = perricoCardElement.querySelector('.dislike-count');
-    likeCountNode.innerText = Number(likeCountNode.innerText) + 1;
+    likeCountNode.innerText = perricoData.dislikes;
   });
 };
 
@@ -239,10 +247,11 @@ dislikeFilter.addEventListener('click', function () {
   filterPerricos();
 });
 
-//función que filtra por likes y dislikes
+//función que filtra por likes y dislikes: (no funcionaba porque antes por default innerText era '' hasta que se votaba, sin mbargo ahora es '0', y antes lo que hacía era filtrar según si tenía o no texto, pero ahora tine texto siempre)
 function filterPerricos() {
   const isLikeFilterSelected = likeFilterButton.classList.contains('filter-selected'); //Comprueba si los botones de filtro (likeFilterButton y dislikeFilter) tienen la clase filter-selected, lo que indica si el usuario activó el filtro de "like" o "dislike".
   const isDislikeSelected = dislikeFilter.classList.contains('filter-selected');
+  
   console.log('filtering', { //Esto imprime en la consola del navegador un objeto con los estados de los filtros, por ejemplo: filtering { isLikeFilterSelected: true, isDislikeSelected: false }
     isLikeFilterSelected,
     isDislikeSelected
@@ -254,21 +263,21 @@ function filterPerricos() {
       perricoNode.style.display = '';
       return;
     }
-    // si preciosismo aplicado y hay preciosisimo lo muestra
-    const likeCount = perricoNode.querySelector('.like-count').innerText;
-    if (likeCount !== '' && isLikeFilterSelected) {
-      perricoNode.style.display = '';
+    // si preciosismo aplicado y hay preciosisimo lo muestra (no funcionaba porque antes por default innerText era '' hasta que se votaba, sin mbargo ahora es '0')
+    const likeCount = parseInt(perricoNode.querySelector('.like-count').innerText, 10); // Convierte el valor de los likes a número
+    if (likeCount > 0 && isLikeFilterSelected) {
+      perricoNode.style.display = ''; // Muestra el perro si tiene al menos 1 like
       return;
     }
 
     // si feísimo aplicado y hay feísimo lo muestra
-    const dislikeCount = perricoNode.querySelector('.dislike-count').innerText;
-    if (dislikeCount !== '' && isDislikeSelected) {
+    const dislikeCount = parseInt(perricoNode.querySelector('.dislike-count').innerText, 10); // Convierte el valor de los dislikes a número
+    if (dislikeCount > 0 && isDislikeSelected) {
       perricoNode.style.display = '';
       return;
     }
 
-    perricoNode.style.display = 'none';
+    perricoNode.style.display = 'none';  // Si no cumple con ningún filtro, lo oculta
   });
 }
 
