@@ -76,6 +76,13 @@ function addSocialListeners() {
       likeCountNode.innerText = perricoData.dislikes;  // Actualiza el contador en el DOM
     });
   });
+};
+
+// Función para obtener el objeto perricoData asociado con una tarjeta, encuentra el valor de like y dislike para actualizarlos
+function getPerricoDataFromNode(buttonNode) {
+  const card = buttonNode.closest('.card'); // Encuentra el elemento más cercano con la clase 'card'
+  const image = card.querySelector('img').src;  // Obtiene la URL de la imagen del perro (que es única para cada perrico)
+  return perricosArray.find(perrico => perrico.image === image);  // Busca el perricoData en el array perricosArray usando la imagen como clave
 }
 
 //función que renderiza el array de perritos, limpia la lista de perros antes de renderizarla y llama a addSocialListeners para habilitar los eventos
@@ -111,7 +118,7 @@ function enableAllAddPerricoButtons() {
 }
 
 
-//función para filtrar los Perros según la raza
+//función para filtrar los Perros según la raza: genera un nuevo array con la raza seleccionada y llama a renderFilterdPerricos pasándole el nuevo array
 const filterByBreed = () =>{
   const breedFilter = selectedBreed; //metemos en una variable la raza que se ha seleccionado en el select
 
@@ -127,6 +134,8 @@ const filterByBreed = () =>{
 const renderFilteredPerricos = (filteredPerricos) =>{ // a esta función se le pasa
   const dogList = document.querySelector('#dog-list'); //seleccionamos el div que contiene las cartas de perros
   dogList.innerHTML = ''; //vacía su contenido
+
+  console.log('Rendering filtered perricos:', filteredPerricos); // Verificar si los perritos filtrados son correctos
 
   filteredPerricos.forEach((perricoData =>{ //para cada objeto de perrito que cree una card y la añada con appendChild a dogList
     const card = document.createElement('div');
