@@ -57,13 +57,13 @@ function clearWarningMessage() {
 
 //función que gestiona likes y dislikes, añade a cada botón un evento: cuando se clicka se el suma 1 al contador
 function addSocialListeners() {
-  document.querySelectorAll('.like').forEach((buttonNode) => {
-    buttonNode.addEventListener('click', function () {
-      const hermanico = buttonNode.previousElementSibling;
-      const likeCountNode = hermanico.querySelector('.like-count');
+  document.querySelectorAll('.like').forEach((buttonNode) => { //selecciona todos los botones de like y los recorre
+    buttonNode.addEventListener('click', function () { //añade un listener
+      const hermanico = buttonNode.previousElementSibling; // = etiqueta <p> con los contadores
+      const likeCountNode = hermanico.querySelector('.like-count') //busca el span con la clase .like-count;
       const perricoData = getPerricoDataFromNode(buttonNode);  // Función para obtener el objeto perricoData
-      perricoData.likes += 1;  // Incrementa el contador de likes
-      likeCountNode.innerText = perricoData.likes;  // Actualiza el contador en el DOM
+      perricoData.likes += 1;  // Incrementa el contador de likes en el objeto dentro de perricosArray
+      likeCountNode.innerText = perricoData.likes;  // Actualiza el contador en el DOM dentro de la etiqueta span
     });
   });
 
@@ -79,7 +79,7 @@ function addSocialListeners() {
 };
 
 // Función para obtener el objeto perricoData asociado con una tarjeta, encuentra el valor de like y dislike para actualizarlos
-function getPerricoDataFromNode(buttonNode) {
+function getPerricoDataFromNode(buttonNode) { //recibe como parámetro el botón de like o dislike que el usuario ha presionado
   const card = buttonNode.closest('.card'); // Encuentra el elemento más cercano con la clase 'card'
   const image = card.querySelector('img').src;  // Obtiene la URL de la imagen del perro (que es única para cada perrico)
   return perricosArray.find(perrico => perrico.image === image);  // Busca el perricoData en el array perricosArray usando la imagen como clave
