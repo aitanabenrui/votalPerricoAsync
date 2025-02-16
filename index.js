@@ -2,6 +2,7 @@ const perricosArray = []; // Este array contendrá los objetos con {image: 'url'
 console.log(perricosArray);
 const select = document.querySelector("#breeds-picker"); //selecciona el desplegable donde elegir las razas
 let selectedBreed = ''; //aquí guardaremos la raza seleccionada en el select
+let filteredPerricos; //array de objetos con los perros de la raza que se quiere filtrar
 
 const timeoutId = setTimeout(() => {
   document.querySelector('#add-warning').style.display = '';
@@ -13,7 +14,7 @@ let breedNamesArray = [];
 //addEventListener para detectar el CAMBIO DE RAZA y actualizar la raza selccionada
 breedsPicker.addEventListener('change', (event)=>{ //función anónima que se ejecuta cuando el valor de un elemento del selct cambia.
   selectedBreed = event.target.value; //evnt.target se refiere al elemento que disparó el evento y value es el valor del elemento targeteado
-  console.log(selectedBreed) //vemos si se actualiza
+  console.log('Filtrando por raza: ', selectedBreed) //vemos si se actualiza
 }) //una vez cambiada la raza usaremos esta variable para pasarsela a getRandomDogImage
 
 window.onload = async()=>{
@@ -80,9 +81,9 @@ function renderPerricoArray() {
   const dogList = document.querySelector('#dog-list');
   dogList.innerHTML = '';
 
-  perricosArray.forEach((dogImage, index) => {
+  perricosArray.forEach((perricoData) => { //como ahora es un objeto cambiamos dogImage por perricoData.image
     const htmlAdd = `<div class="card">
-  <img src="${dogImage}" alt="Perro" />
+  <img src="${perricoData.image}" alt="Perro" />
   <br />
   <p><span class="like-count"></span>❤️ <span class="dislike-count"></span>🤮</p>
   <button class="like">Preciosísimo</button> <button class="dislike">Feísisimo</button>
@@ -92,7 +93,7 @@ function renderPerricoArray() {
   });
 
   addSocialListeners();
-}
+};
 
 //funciones que deshabilitan los botones hasta quee se carguen las cartas de perros
 
@@ -108,6 +109,42 @@ function enableAllAddPerricoButtons() {
   });
 }
 
+
+//función para filtrar los Perros según la raza
+
+const filterByBreed = () =>{
+  const breedFilter = selectedBreed; //metemos en una variable la raza que se ha seleccionado en el select
+
+  //filtramos el array de perricosArray por la raza seleccionada ( perricosArray es un array de objetos con la url de la imágen y la raza)
+  filteredPerricos = breedFilter === '' || breedFilter === 'Todas las razas'
+  ? perricosArray : perricosArray.filter(perrico => perrico.breed === breedFilter ); //la variable filteredPerricos es un nuevo array de objetos con solo la raza de perro seleccionada
+  
+  renderFilteredPerricos(filteredPerricos); //llamamos a la función qu renderiza los perritos filtrados (array de objetos)
+};
+
+
+//función que renderiza los perritos filtrados por raza
+
+const renderFilteredPerricos = (filteredPerricos) =>{ // a esta función se le pasa
+  const dogList = document.querySelector('#dog-list'); //seleccionamos el div que contiene las cartas de perros
+  dogList.innerHTML = ''; //vacía su contenido
+
+  filteredPerricos.forEach((perricoData =>{ //para cada objeto de perrito que cree una card y la añada con appendChild a dogList
+    const card = document.createElement('div');
+    card.className = 'card';
+    //perricoData.imgae es la propiedad del objeto perricoData que contiene la url de la imágen
+    card.innerHTML = `
+    <img src="${perricoData.image}" alt="Perro" />
+    <br />
+    <p><span class="like-count"></span>❤️ <span class="dislike-count"></span>🤮</p>
+    <button class="like">Preciosísimo</button> <button class="dislike">Feísisimo</button>`;
+
+    dogList.appendChild(card);
+  }))
+  addSocialListeners(); //y se llama a esta función para añadir la funcionalidad de like y dislike
+};
+
+
  //función asíncrona que añade un perrito, obtioene un perrico al alzar con getRandomDogImage, añade al principio o al final y crea un div con la imágen y los botones
 
 const addPerrico = async (addToStart) => {
@@ -122,11 +159,11 @@ const perricoData = {
   breed: breed
 };
 
- // Para añadir el perro al array, al principio o al final dependiendo de addToStart
+ // Para añadir el objeto perro al array, al principio o al final dependiendo de addToStart
   if (addToStart) {
-    perricosArray.unshift(perricoImg);
+    perricosArray.unshift(perricoData);
   } else {
-    perricosArray.push(perricoImg);
+    perricosArray.push(perricoData);
   }
 
   const dogList = document.querySelector('#dog-list');
@@ -163,7 +200,12 @@ const perricoData = {
   });
 };
 
+
 //definición de eventos para los botones
+
+document.querySelector('#filter-button').addEventListener('click', function () {
+  filterByBreed(); // Llamamos a la función de filtro cuando se hace clic
+});
 
 document.querySelector('#add-1-perrico').addEventListener('click', async function () { //debe ser asincrona la función porque necesitamos un await, esto funciona porque addPerrico() también es asíncrona
   clearWarningMessage();
