@@ -48,13 +48,14 @@ for (let breed in dogBreeds){
 console.log(breedNamesArray); 
 };
 
-// addPerrico();
+// función para ocultar el mensaje de advertencia, borra el set time out si aún no ha aparecido el mensaje y si ya ha aparecido lo oculta
 
 function clearWarningMessage() {
   clearTimeout(timeoutId);
   document.querySelector('#add-warning').style.display = 'none';
 }
 
+//función que gestiona likes y dislikes, añade a cada botón un evento: cuando se clicka se el suma 1 al contador
 function addSocialListeners() {
   document.querySelectorAll('.like').forEach((buttonNode) => {
     buttonNode.addEventListener('click', function () {
@@ -72,6 +73,8 @@ function addSocialListeners() {
     });
   });
 }
+
+//función que renderiza el array de perritos, limpia la lista de perros antes de renderizarla y llama a addSocialListeners para habilitar los eventos
 
 function renderPerricoArray() {
   const dogList = document.querySelector('#dog-list');
@@ -91,6 +94,8 @@ function renderPerricoArray() {
   addSocialListeners();
 }
 
+//funciones que deshabilitan los botones hasta quee se carguen las cartas de perros
+
 function disableAllAddPerricoButtons() { //deshabilita todos los botones de añadir perritos, esto es para que se deshabiliten hasta que se carguen todas las imágenes
   document.querySelectorAll('.add-button').forEach((buttonNode) => {
     buttonNode.disabled = true;
@@ -102,6 +107,8 @@ function enableAllAddPerricoButtons() {
     buttonNode.disabled = false;
   });
 }
+
+ //función asíncrona que añade un perrito, obtioene un perrico al alzar con getRandomDogImage, añade al principio o al final y crea un div con la imágen y los botones
 
 const addPerrico = async (addToStart) => {
     // const breed = document.querySelector('[name=breeds]').value; //selecciona el valor del select
@@ -156,6 +163,8 @@ const perricoData = {
   });
 };
 
+//definición de eventos para los botones
+
 document.querySelector('#add-1-perrico').addEventListener('click', async function () { //debe ser asincrona la función porque necesitamos un await, esto funciona porque addPerrico() también es asíncrona
   clearWarningMessage();
 //igual para todos los botones, debemos añadir un await antes de volver a activar el botón
@@ -194,16 +203,18 @@ dislikeFilter.addEventListener('click', function () {
   filterPerricos();
 });
 
+//función que filtra por likes y dislikes
+
 function filterPerricos() {
-  const isLikeFilterSelected = likeFilterButton.classList.contains('filter-selected');
+  const isLikeFilterSelected = likeFilterButton.classList.contains('filter-selected'); //Comprueba si los botones de filtro (likeFilterButton y dislikeFilter) tienen la clase filter-selected, lo que indica si el usuario activó el filtro de "like" o "dislike".
   const isDislikeSelected = dislikeFilter.classList.contains('filter-selected');
-  console.log('filtering', {
+  console.log('filtering', { //Esto imprime en la consola del navegador un objeto con los estados de los filtros, por ejemplo: filtering { isLikeFilterSelected: true, isDislikeSelected: false }
     isLikeFilterSelected,
     isDislikeSelected
   });
 
-  document.querySelectorAll('.card').forEach((perricoNode) => {
-    // si no hay ningún filtro aplicado, lo muestra
+  document.querySelectorAll('.card').forEach((perricoNode) => { //Usa .forEach() para recorrer cada una y decidir si debe mostrarse o esconderse.
+    // si no hay ningún filtro aplicado, los muestra todos
     if (!isLikeFilterSelected && !isDislikeSelected) {
       perricoNode.style.display = '';
       return;
