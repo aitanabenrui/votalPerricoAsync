@@ -50,7 +50,6 @@ console.log(breedNamesArray);
 };
 
 // función para ocultar el mensaje de advertencia, borra el set time out si aún no ha aparecido el mensaje y si ya ha aparecido lo oculta
-
 function clearWarningMessage() {
   clearTimeout(timeoutId);
   document.querySelector('#add-warning').style.display = 'none';
@@ -76,7 +75,6 @@ function addSocialListeners() {
 }
 
 //función que renderiza el array de perritos, limpia la lista de perros antes de renderizarla y llama a addSocialListeners para habilitar los eventos
-
 function renderPerricoArray() {
   const dogList = document.querySelector('#dog-list');
   dogList.innerHTML = '';
@@ -96,7 +94,6 @@ function renderPerricoArray() {
 };
 
 //funciones que deshabilitan los botones hasta quee se carguen las cartas de perros
-
 function disableAllAddPerricoButtons() { //deshabilita todos los botones de añadir perritos, esto es para que se deshabiliten hasta que se carguen todas las imágenes
   document.querySelectorAll('.add-button').forEach((buttonNode) => {
     buttonNode.disabled = true;
@@ -111,7 +108,6 @@ function enableAllAddPerricoButtons() {
 
 
 //función para filtrar los Perros según la raza
-
 const filterByBreed = () =>{
   const breedFilter = selectedBreed; //metemos en una variable la raza que se ha seleccionado en el select
 
@@ -124,7 +120,6 @@ const filterByBreed = () =>{
 
 
 //función que renderiza los perritos filtrados por raza
-
 const renderFilteredPerricos = (filteredPerricos) =>{ // a esta función se le pasa
   const dogList = document.querySelector('#dog-list'); //seleccionamos el div que contiene las cartas de perros
   dogList.innerHTML = ''; //vacía su contenido
@@ -146,7 +141,6 @@ const renderFilteredPerricos = (filteredPerricos) =>{ // a esta función se le p
 
 
  //función asíncrona que añade un perrito, obtioene un perrico al alzar con getRandomDogImage, añade al principio o al final y crea un div con la imágen y los botones
-
 const addPerrico = async (addToStart) => {
     // const breed = document.querySelector('[name=breeds]').value; //selecciona el valor del select
     const breed = selectedBreed; //raza de perro seleccionada
@@ -246,7 +240,6 @@ dislikeFilter.addEventListener('click', function () {
 });
 
 //función que filtra por likes y dislikes
-
 function filterPerricos() {
   const isLikeFilterSelected = likeFilterButton.classList.contains('filter-selected'); //Comprueba si los botones de filtro (likeFilterButton y dislikeFilter) tienen la clase filter-selected, lo que indica si el usuario activó el filtro de "like" o "dislike".
   const isDislikeSelected = dislikeFilter.classList.contains('filter-selected');
