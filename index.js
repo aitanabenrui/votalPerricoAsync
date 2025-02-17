@@ -56,6 +56,7 @@ function clearWarningMessage() {
 }
 
 //función que gestiona likes y dislikes, añade a cada botón un evento: cuando se clicka se el suma 1 al contador
+//add social listeners solo selecciona los botones que ya existen en el DOM cuando se ejecuta, necesitamos añadir las funcionalidads de like y dislike a addPerrico
 function addSocialListeners() {
   document.querySelectorAll('.like').forEach((buttonNode) => { //selecciona todos los botones de like y los recorre
     buttonNode.addEventListener('click', function () { //añade un listener
