@@ -35,7 +35,7 @@ body {
     max-height: 150px;
   }
   
-  .filter-selected {
+  .filter-selected, .active-filter {
     background: #3661d5;
     color: white;
   }
