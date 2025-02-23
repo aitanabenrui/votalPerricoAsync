@@ -251,7 +251,7 @@ console.log(activeFilter);
 //función que filtra por razas
 const toggleBreedFilter = (breed, button) =>{
   if(activeFilter === breed){
-    activeFilter = null; // si ya está filstrando por esa raza, desactiva el filtro
+    activeFilter = null; // si ya está filtrando por esa raza, desactiva el filtro
     button.classList.remove('active-filter'); //quita el estilo de filtro activo
     renderPerricoArray(); //muestra todos los perros nuevamente
   } else {
@@ -264,34 +264,6 @@ const toggleBreedFilter = (breed, button) =>{
     renderFilteredPerricos(filteredPerricos); // Muestra solo los perros de la raza seleccionada
   }
 }
-
-//función que contiene parte de la lógica de renderFilteredPerricos
-const renderPerricoCard = (perricoData) => {
-  const dogList = document.querySelector("#dog-list");
-  const card = document.createElement("div");
-  card.className = "card";
-  card.innerHTML = `
-    <img src="${perricoData.image}" alt="Perro" />
-    <br />
-    <p><span class="like-count">${perricoData.likes || 0}</span>❤️ <span class="dislike-count">${perricoData.dislikes || 0}</span>🤮</p>
-    <button class="like">Preciosísimo</button> <button class="dislike">Feísisimo</button>`;
-  
-  // Añadir los listeners de like y dislike aquí
-  const likeButton = card.querySelector('.like');
-  const dislikeButton = card.querySelector('.dislike');
-
-  likeButton.addEventListener('click', function () {
-    perricoData.likes++;
-    card.querySelector('.like-count').innerText = perricoData.likes;
-  });
-
-  dislikeButton.addEventListener('click', function () {
-    perricoData.dislikes++;
-    card.querySelector('.dislike-count').innerText = perricoData.dislikes;
-  });
-
-  dogList.appendChild(card);
-};
 
 //definición de eventos para los botones
 
