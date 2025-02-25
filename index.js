@@ -4,6 +4,8 @@ const select = document.querySelector("#breeds-picker"); //selecciona el despleg
 let selectedBreed = ''; //aquí guardaremos la raza seleccionada en el select
 let filteredPerricos; //array de objetos con los perros de la raza que se quiere filtrar
 let breedCounters = {}; // objeto que guardará los contadores de cada raza de perros
+let activeFilters = []; //array que almacna múltipls razas seleccionadas para poder filtrarlas luego
+console.log(activeFilters);
 
 const timeoutId = setTimeout(() => {
   document.querySelector('#add-warning').style.display = '';
@@ -122,13 +124,13 @@ function enableAllAddPerricoButtons() {
 
 //función para filtrar los Perros según la raza: genera un nuevo array con la raza seleccionada y llama a renderFilterdPerricos pasándole el nuevo array
 const filterByBreed = () =>{
-  const breedFilter = selectedBreed; //metemos en una variable la raza que se ha seleccionado en el select
-
-  //filtramos el array de perricosArray por la raza seleccionada ( perricosArray es un array de objetos con la url de la imágen y la raza)
-  filteredPerricos = breedFilter === '' || breedFilter === 'Todas las razas'
-  ? perricosArray : perricosArray.filter(perrico => perrico.breed === breedFilter ); //la variable filteredPerricos es un nuevo array de objetos con solo la raza de perro seleccionada
-  
-  renderFilteredPerricos(filteredPerricos); //llamamos a la función qu renderiza los perritos filtrados (array de objetos)
+  if (activeFilters.length === 0){ //si en el array de filtrado no hay razas
+    renderPerricoArray(); //se renderizan todos los perros
+    return;
+  }
+//filterdPerricos es una variable que almacena los objetos de las razas de perro a filtrar. En este caso obtendrá los perros cuya raza están en el array activeFilters
+  filteredPerricos = perricosArray.filter(perrico => activeFilters.includes(perrico.breed));
+  renderFilteredPerricos(filteredPerricos);
 };
 
 
@@ -237,7 +239,7 @@ const createBreedFilterButton = (breed) => {
 
   if(!button){ //si tiene valor falsy (null, 0, undefined, false, '', NaN)
     button = document.createElement('button');
-    button.id = `#filter-${breed}`;
+    button.id = `filter-${breed}`;
     button.innerHTML = `${breed} (<span id="counter-${breed}">1</span>)`; 
     button.addEventListener('click', ()=> 
       toggleBreedFilter(breed, button)); //llama a la función toggleBreedFilter
@@ -245,24 +247,19 @@ const createBreedFilterButton = (breed) => {
   }
 };
 
-let activeFilter = null; // Variable que irá cambiando para sabr si el filtro está activo
-console.log(activeFilter);
 
-//función que filtra por razas
+
+//función que filtra por razas, modifica el array activeFiltrs para saber cualse tiene que filtrar
 const toggleBreedFilter = (breed, button) =>{
-  if(activeFilter === breed){
-    activeFilter = null; // si ya está filtrando por esa raza, desactiva el filtro
+  if(activeFilters.includes(breed)){ //si una raza ya está activa se elimina 
+    activeFilters = activeFilters.filter(activeBreed => activeBreed !== breed);
     button.classList.remove('active-filter'); //quita el estilo de filtro activo
     renderPerricoArray(); //muestra todos los perros nuevamente
   } else {
-    activeFilter = breed; //activa el filtro por esa raza
-    document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active-filter')); //desactiva otros filtros
-    button.classList.add('active-filter'); //aplica estilo al botón activo
-
-    // Filtra los perros por raza y renderiza, esto es lo que hace que al rerenderizar los perros después de filtrar, los votos funcionen
-    const filteredPerricos = perricosArray.filter(perrico => perrico.breed === activeFilter);
-    renderFilteredPerricos(filteredPerricos); // Muestra solo los perros de la raza seleccionada
+    activeFilters.push(breed); //si no está activa se pushea dentro del array de razas a filtrar
+    button.classList.add('active-filter');
   }
+  filterByBreed(); //se usa filtrByBreed para actualizar la lista de perros
 }
 
 //definición de eventos para los botones
