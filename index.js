@@ -161,6 +161,11 @@ const renderFilteredPerricos = (filteredPerricos) =>{ // a esta función se le p
 
 
  //función asíncrona que añade un perrito, obtioene un perrico al alzar con getRandomDogImage, añade al principio o al final y crea un div con la imágen y los botones
+
+//todo el manejo de razas, contadores y botones de filtro se ejecuta cuando se agrega un perro.
+// Esto mantiene el flujo del código más claro y organizado, y asegura que los elementos del DOM 
+// (como los botones de raza y los contadores) se manejen correctamente en el momento exacto en que se agregan nuevos perros,
+// evitando errores de sincronización.
 const addPerrico = async (addToStart) => {
     // const breed = document.querySelector('[name=breeds]').value; //selecciona el valor del select
     let breed = selectedBreed; //raza de perro seleccionada
