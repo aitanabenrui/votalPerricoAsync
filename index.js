@@ -163,9 +163,14 @@ const renderFilteredPerricos = (filteredPerricos) =>{ // a esta función se le p
  //función asíncrona que añade un perrito, obtioene un perrico al alzar con getRandomDogImage, añade al principio o al final y crea un div con la imágen y los botones
 const addPerrico = async (addToStart) => {
     // const breed = document.querySelector('[name=breeds]').value; //selecciona el valor del select
-    const breed = selectedBreed; //raza de perro seleccionada
+    let breed = selectedBreed; //raza de perro seleccionada
+    
+    // Si no hay raza seleccionada, obtenemos una imagen aleatoria y detectamos su raza
     const perricoImg = await getRandomDogImage(breed); //desde aquí llamamos a la función getRandomDogImage del archivo js api
 //si selectedBreed está vacío ('') como dice en el archivo api.js, se pasará un link de foto de perro aleatorio
+  if (!breed) {
+    breed = extractBreedFromImage(perricoImg); // Detectar la raza desde la URL de la imagen y añadirla a la variable breed
+  }
 
 //creamos un objeto con la imágen y la raza
 const perricoData = {
@@ -174,6 +179,21 @@ const perricoData = {
   likes: 0, //contador de likes
   dislikes: 0 //contador de dislikes
 };
+
+ // Aquí es donde insertamos el bloque que maneja el contador de razas
+  if (!breedCounters[breed]) {
+    breedCounters[breed] = 1; // Iniciar el contador en 1 para esta raza
+    createBreedFilterButton(breed); // Crear el botón si no existe
+
+  // Asegurarnos de que el botón se creó antes de actualizar el contador
+  setTimeout(() => {
+      updateBreedCounter(breed); // Actualiza el contador con el valor actual
+  }, 50); // Le damos un pequeño margen de tiempo
+  } else {
+    breedCounters[breed]++; // Si la raza ya existe, incrementamos el contador
+    updateBreedCounter(breed); // Actualizar el contador de la raza
+}
+
 
  // Para añadir el objeto perro al array, al principio o al final dependiendo de addToStart
   if (addToStart) {
@@ -222,15 +242,27 @@ const perricoData = {
   updateBreedCounter(breed);
 };
 
+//función que extrae la raza desde la url de la imágen para poder detectarla
+const extractBreedFromImage = (imageUrl) => {
+  const regex = /breeds\/([^\/]+)\//; // Extrae el nombre de la raza de la URL
+  const match = imageUrl.match(regex);
+  
+  if (match && match[1]) {
+      let breed = match[1].replace("-", " "); // Formatear raza correctamente
+      return breed;
+  }
+  return "Desconocida"; // Si no se puede extraer, devolver "Desconocida"
+};
+
+
 //función que se encarga de actualizar los contadores de razas de perritos, si la raza aún no tiene un botón, crealo, si ya lo tiene incrementa el contador
 const updateBreedCounter = (breed) =>{
-  if(!breedCounters[breed]){ //si no existe en el objeto breedCounters = {raza: 1} que la añada
-  breedCounters[breed] = 1;
-  createBreedFilterButton(breed); //llama a la función que añada el botón de la raza
-  } else {
-    breedCounters[breed]++; //si ya existe la raza suma 1
-  }
-  document.querySelector(`#counter-${breed}`).innerHTML = breedCounters[breed]; //actualiza el contador de razas
+  const counterElement = document.querySelector(`#counter-${breed}`);
+    if (counterElement) {
+        counterElement.innerHTML = breedCounters[breed];
+    } else {
+        console.warn(`No se encontró el contador para la raza: ${breed}`);
+    }
 }
 
 //función que crea el botón de la raza si no ha sido creada previamente
@@ -245,6 +277,7 @@ const createBreedFilterButton = (breed) => {
     button.addEventListener('click', ()=> 
       toggleBreedFilter(breed, button)); //llama a la función toggleBreedFilter
     filterContainer.appendChild(button); //añade dentro del div el botón
+    console.log(`Botón creado para: ${breed}`); //indica en consola si se ha creado el botón con la raza
   }
 };
 
