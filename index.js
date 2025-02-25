@@ -124,12 +124,13 @@ function enableAllAddPerricoButtons() {
 
 //función para filtrar los Perros según la raza: genera un nuevo array con la raza seleccionada y llama a renderFilterdPerricos pasándole el nuevo array
 const filterByBreed = () =>{
-  if (activeFilters.length === 0){ //si en el array de filtrado no hay razas
+  if (activeFilters.length === 0){ //si en el array de filtrado no hay razas, no hay filtros activados, muestra todos los perros
     renderPerricoArray(); //se renderizan todos los perros
     return;
   }
 //filterdPerricos es una variable que almacena los objetos de las razas de perro a filtrar. En este caso obtendrá los perros cuya raza están en el array activeFilters
-  filteredPerricos = perricosArray.filter(perrico => activeFilters.includes(perrico.breed));
+//filtra solo los perros que coinicdadn con alguna de las razas activas 
+filteredPerricos = perricosArray.filter(perrico => activeFilters.includes(perrico.breed));
   renderFilteredPerricos(filteredPerricos);
 };
 
@@ -251,11 +252,13 @@ const createBreedFilterButton = (breed) => {
 
 //función que filtra por razas, modifica el array activeFiltrs para saber cualse tiene que filtrar
 const toggleBreedFilter = (breed, button) =>{
-  if(activeFilters.includes(breed)){ //si una raza ya está activa se elimina 
+  if(activeFilters.includes(breed)){
+    //si la raza ya está activa, la eliminamos del array 
     activeFilters = activeFilters.filter(activeBreed => activeBreed !== breed);
     button.classList.remove('active-filter'); //quita el estilo de filtro activo
     renderPerricoArray(); //muestra todos los perros nuevamente
   } else {
+    //si la raza no está activa, la agregamos al array
     activeFilters.push(breed); //si no está activa se pushea dentro del array de razas a filtrar
     button.classList.add('active-filter');
   }
