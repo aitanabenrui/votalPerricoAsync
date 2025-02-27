@@ -253,7 +253,10 @@ const extractBreedFromImage = (imageUrl) => {
   const match = imageUrl.match(regex);
   
   if (match && match[1]) {
-      let breed = match[1].replace("-", "--"); // Formatear raza correctamente
+      let parts = match[1].split("-"); // Separar por "-"
+      let breed = parts.length > 1 
+        ? `${parts[1]}--${parts[0]}`  // Si hay subraza, invertir el orden
+        : parts[0];                    // Si no hay subraza, mantener igual
       return breed;
   }
   return "Desconocida"; // Si no se puede extraer, devolver "Desconocida"
