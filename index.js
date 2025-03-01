@@ -132,6 +132,7 @@ const filterByBreed = () =>{
 //filtra solo los perros que coinicdadn con alguna de las razas activas 
 filteredPerricos = perricosArray.filter(perrico => activeFilters.includes(perrico.breed));
   renderFilteredPerricos(filteredPerricos);
+  filterPerricos();
 };
 
 
@@ -199,22 +200,43 @@ const perricoData = {
     updateBreedCounter(breed); // Actualizar el contador de la raza
 }
 
-
- // Para añadir el objeto perro al array, al principio o al final dependiendo de addToStart
+// Para añadir el objeto perro al array, al principio o al final dependiendo de addToStart
   if (addToStart) {
     perricosArray.unshift(perricoData);
   } else {
     perricosArray.push(perricoData);
   }
 
+//Verificar si el nuevo perrico cumple con los filtros activos
+  if (shouldShowPerrico(perricoData)) {
+    renderPerrico(perricoData, addToStart);
+  }
+};
 
+// Función que determina si un perrico debe mostrarse
+const shouldShowPerrico = (perricoData) => {
+  // Verifica si está filtrando por raza y si la raza del perrico está incluida en los filtros activos
+  const breedMatch = activeFilters.length === 0 || activeFilters.includes(perricoData.breed);
+
+  // Verifica si está filtrando por likes o dislikes
+  const likeFilterActive = document.querySelector('#like-filter').classList.contains('filter-selected');
+  const dislikeFilterActive = document.querySelector('#dislike-filter').classList.contains('filter-selected');
+  
+  const likeMatch = !likeFilterActive || perricoData.likes > 0;
+  const dislikeMatch = !dislikeFilterActive || perricoData.dislikes > 0;
+
+  return breedMatch && likeMatch && dislikeMatch;
+};
+
+//Movemos esta parte de la lógica de addPerrico a otra función llamada renderPerrico, y desde addPerrico la llamamos si el nuevo perro cumple con los filtros
+const renderPerrico = (perricoData, addToStart)=>{
   const dogList = document.querySelector('#dog-list');
 
-  const isAnyFilterSelected = document.querySelector('.filter-selected');
+  // const isAnyFilterSelected = document.querySelector('.filter-selected');
 
   const perricoCardElement = document.createElement('div');
   perricoCardElement.className = 'card';
-  perricoCardElement.style.display = isAnyFilterSelected ? 'none' : '';
+  // perricoCardElement.style.display = isAnyFilterSelected ? 'none' : '';
 
   perricoCardElement.innerHTML = `
   <img src="${perricoData.image}" alt="Perro" />
@@ -228,23 +250,18 @@ const perricoData = {
     dogList.appendChild(perricoCardElement);
   }
 
-  const likeButton = perricoCardElement.querySelector('.like');
+// Añadir eventos de like y dislike
+perricoCardElement.querySelector('.like').addEventListener('click', function () {
+  perricoData.likes++;
+  perricoCardElement.querySelector('.like-count').innerText = perricoData.likes;
+  filterByBreed(); // Vuelve a filtrar si es necesario
+});
 
-  likeButton.addEventListener('click', function () {
-    perricoData.likes++;
-    const likeCountNode = perricoCardElement.querySelector('.like-count');
-    likeCountNode.innerText = perricoData.likes;
-  });
-
-  const dislikeButton = perricoCardElement.querySelector('.dislike');
-  dislikeButton.addEventListener('click', function () {
-    perricoData.dislikes++;
-    const likeCountNode = perricoCardElement.querySelector('.dislike-count');
-    likeCountNode.innerText = perricoData.dislikes;
-  });
-
-  //llamamos a la función que actualiza el contado de la raza
-  updateBreedCounter(breed);
+perricoCardElement.querySelector('.dislike').addEventListener('click', function () {
+  perricoData.dislikes++;
+  perricoCardElement.querySelector('.dislike-count').innerText = perricoData.dislikes;
+  filterByBreed(); // Vuelve a filtrar si es necesario
+});
 };
 
 //función que extrae la raza desde la url de la imágen para poder detectarla
