@@ -7,7 +7,7 @@ class Dog {
         this.dislikes = dislikes; //contador de dislikes
     }
 
-    //métodos likes y disliks que se encargan de incremntar el valor
+    //métodos likes y dislikes que se encargan de incremntar el valor
     likes(){
         this.likes++;
     }
@@ -33,7 +33,8 @@ class Dog {
     isPreciosisimo(){
         return this.likes > 0;
     }
-}
+} 
+
 
 
 class DogList {
