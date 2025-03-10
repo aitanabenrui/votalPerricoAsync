@@ -173,10 +173,23 @@ breedsPicker.addEventListener('change', (event)=>{ //función anónima que se ej
 
 const list = new DogList('#dog-list');
 
+//listener para el botón de añadir un perro al final
 document.querySelector('#add-1-perrico').addEventListener('click', async function () { //debe ser asincrona la función porque necesitamos un await, esto funciona porque addPerrico() también es asíncrona
     await list.addDogEnd(selectedBreed);
     list.applyFilter();
     console.log('click');
+});
+
+//listener para el botón de añadir un perro al principio
+document.querySelector('#add-1-perrico-start').addEventListener('click', async function () {
+    await list.addDogStart(selectedBreed);
+    list.applyFilter();
+    console.log('click');
+});
+  //listener para el botón de añadir 5 perros
+document.querySelector('#add-5-perricos').addEventListener('click', async function () {
+    await list.addFiveDog(selectedBreed); //esto hace que se ejecuten todas las llamadas a la función a la vez, y que no siga l código hasta que todas se ejecuten
+    list.applyFilter(); //aplica los filtros y luego renderiza
 });
 
 console.log(list.breedsCount);
