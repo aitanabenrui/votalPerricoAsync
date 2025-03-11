@@ -8,12 +8,12 @@ class Dog {
     }
 
     //métodos likes y dislikes que se encargan de incremntar el valor
-    addLikes(){
+    addLike(){
         this.likes++;
         this.updateCounts();
     }
 
-    addDislikes(){
+    addDislike(){
         this.dislikes++;
         this.updateCounts();
     }
@@ -78,6 +78,7 @@ class DogList { //maneja una lista de perros y permite agregar, mostrar y filtra
         this.container.innerHTML = ''; //resetear el html
         dogList.forEach(dog => {
             this.container.appendChild(dog.card()); //añade el elemento correctamente
+            //dogcard devulve un elemento html no una cadena de texto, para que funcione hay que usar appendchild
         });
     }
 
