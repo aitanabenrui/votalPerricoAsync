@@ -95,15 +95,25 @@ class DogList { //maneja una lista de perros y permite agregar, mostrar y filtra
             return true;
         });
 
-        this.display(filteredDogs); 
+        this.display(filteredDogs); //volvemos a llamar a display
     }
 
     switchLikeFilter(){ //alterna los filtros de me gusta y no me gusta al presionar el botón
         this.filtersApplied.like = !this.filtersApplied.like;
+        if(this.filtersApplied.like){document.querySelector('#like-filter').classList.add('blue');}
+        else {
+            document.querySelector('#like-filter').classList.remove('blue');
+        }
+        this.applyFilter();
     }
 
     switchDislikeFilter(){
         this.filtersApplied.dislike = !this.filtersApplied.dislike;
+        if(this.filtersApplied.dislike){document.querySelector('#dislike-filter').classList.add('blue');}
+        else {
+            document.querySelector('#dislike-filter').classList.remove('blue');
+        }
+        this.applyFilter();
     }
 
     setBreedFilter(breed){ //añade o elimina razas del filtro al array breed[]
@@ -218,6 +228,21 @@ document.querySelector('#add-5-perricos').addEventListener('click', async functi
     list.applyFilter(); //aplica los filtros y luego renderiza
 });
 
+document.querySelector('#like-filter').addEventListener('click', function(){
+    list.switchLikeFilter(); //primero se activa o desactiva el filtro, y lugo se aplican los filtros
+});
+
+document.querySelector('#dislike-filter').addEventListener('click', function(){
+    list.switchDislikeFilter();
+});
+
 
 
 console.log(list.breedsCount);
+
+//asegurarme de que en todas las creaciones de perro se actualicen breesdCount
+//usar un método para crear botones de filtro 
+//metodo al  qu el pase raza y numero y haga un botón
+//metodo con un for que llame a crear botones
+//añadir addevent listener del botón de razas, añadir la raza al array, añadir  y quitar 
+//luego de clickar llamar a apply filter  
