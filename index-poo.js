@@ -131,6 +131,7 @@ class DogList { //maneja una lista de perros y permite agregar, mostrar y filtra
         const randomImg = await getRandomDogImage(breed);
         const dog = new Dog(randomImg, this.extractBreedFromImage(randomImg));
         this.dogs.unshift(dog);
+        this.updateBreedCount(dog.breed);
         //añadir en el objeto breedsCount (hacer función que lo añada)
     }
 
@@ -138,6 +139,7 @@ class DogList { //maneja una lista de perros y permite agregar, mostrar y filtra
         const randomImg = await getRandomDogImage(breed);
         const dog = new Dog(randomImg, this.extractBreedFromImage(randomImg));
         this.dogs.push(dog);
+        this.updateBreedCount(dog.breed);
     }
 
     async addFiveDog(breed){ //si hay una raza seleccionada le pasamos un string con la raza
@@ -145,7 +147,17 @@ class DogList { //maneja una lista de perros y permite agregar, mostrar y filtra
             const randomImg = await getRandomDogImage(breed);
             const dog = new Dog(randomImg, this.extractBreedFromImage(randomImg));
             this.dogs.push(dog);
+            this.updateBreedCount(dog.breed);
         }
+    }
+
+    updateBreedCount(breed){ //método que actualiza el objeto breedsCount, tiene el contador de cuantos perros hay en cada raza
+        if(this.breedsCount[breed]){ //si existe
+            this.breedsCount[breed]++; 
+        } else {
+            this.breedsCount[breed] = 1;
+        }
+        console.log(this.breedsCount);
     }
 
     extractBreedFromImage(imageUrl){
@@ -161,6 +173,16 @@ class DogList { //maneja una lista de perros y permite agregar, mostrar y filtra
         }
         return "Desconocida"; // Si no se puede extraer, devolver "Desconocida"
     };
+
+    toggleBreedFilter(breed){
+        if(this.filtersApplied.breeds.includes(breed)){
+            this.filtersApplied.breeds = this.filtersApplied.breeds.filter((raza)=>{
+                raza != breed
+            })
+        } else {
+            this.filtersApplied.breeds.push(breed);
+        }
+    }
 }
 
 //hacer que los botones de filtros llamen a la función correcta
@@ -170,33 +192,50 @@ let breedNamesArray = [];
 window.onload = async()=>{
     const dogBreeds = await getDogBreeds(); //esto es el objeto de razas de perros
 
-for (let breed in dogBreeds){
-    if(dogBreeds[breed].length === 0){
-        breedNamesArray.push(breed);
-        let option = document.createElement("option");
-        option.value = breed;
-        option.textContent = breed;
-        select.appendChild(option); //appendChild coloca los nuevos elementos al final del elemento padre
-    } else {
-        let optgroup = document.createElement("optgroup"); //crae el contenedor optgroup con label breed y valu breed
-        optgroup.label = breed; //aparecrá el nombre de la raza principal en la ventana desplegable
-        optgroup.value = breed; //lo mismo para el atributo value
+    for (let breed in dogBreeds){
+        if(dogBreeds[breed].length === 0){
+            breedNamesArray.push(breed);
+            let option = document.createElement("option");
+            option.value = breed;
+            option.textContent = breed;
+            select.appendChild(option); //appendChild coloca los nuevos elementos al final del elemento padre
+        } else {
+            let optgroup = document.createElement("optgroup"); //crae el contenedor optgroup con label breed y valu breed
+            optgroup.label = breed; //aparecrá el nombre de la raza principal en la ventana desplegable
+            optgroup.value = breed; //lo mismo para el atributo value
 
-        //dentro del forEach metermos cada option que tenga la raza en concreto
-        dogBreeds[breed].forEach((breedSurname)=>{
+            //dentro del forEach metermos cada option que tenga la raza en concreto
+            dogBreeds[breed].forEach((breedSurname)=>{
 
-            const breedFullName = `${breedSurname}--${breed}`;
-            breedNamesArray.push(`${breedSurname} ${breed}`);
-            let option = document.createElement("option"); //crea un elmento option con value breedFullName
-            option.value = breedFullName;
-            option.textContent = `${breedSurname} ${breed}`;
-            optgroup.appendChild(option); //se añade la etiqueta option a optgroup
-        });
-        select.appendChild(optgroup); //una vez añadidas todas las subrazas al padre optgroup, este se añad al padre "select"
+                const breedFullName = `${breedSurname}--${breed}`;
+                breedNamesArray.push(`${breedSurname} ${breed}`);
+                let option = document.createElement("option"); //crea un elmento option con value breedFullName
+                option.value = breedFullName;
+                option.textContent = `${breedSurname} ${breed}`;
+                optgroup.appendChild(option); //se añade la etiqueta option a optgroup
+            });
+            select.appendChild(optgroup); //una vez añadidas todas las subrazas al padre optgroup, este se añad al padre "select"
+        }
     }
-}
+};
 
-console.log(breedNamesArray); 
+//función que crea el botón
+const createBreedButtons = () =>{
+    const breedFilterButtons = document.querySelector('#breed-filter');
+    breedFilterButtons.innerHTML = ''; //limpia el html y regenera los botones de raza
+    for(let breed in list.breedsCount){
+        button = document.createElement('button');
+        button.id = `filter-${breed}`;
+        button.innerHTML = `${breed} (<span id="counter-${breed}">${list.breedsCount[breed]}</span>)`; 
+        button.addEventListener('click', ()=> {
+            list.toggleBreedFilter(breed)}); //llama a la función toggleBreedFilter
+        if(list.filtersApplied.breeds.includes(breed)){
+            button.classList.add('blue');
+        } else{
+            button.classList.remove('blue');
+        }
+        breedFilterButtons.appendChild(button);
+    }
 };
 
 const breedsPicker = document.querySelector("#breeds-picker");
@@ -213,6 +252,7 @@ const list = new DogList('#dog-list');
 document.querySelector('#add-1-perrico').addEventListener('click', async function () { //debe ser asincrona la función porque necesitamos un await, esto funciona porque addPerrico() también es asíncrona
     await list.addDogEnd(selectedBreed);
     list.applyFilter();
+    createBreedButtons();
     console.log('click');
 });
 
@@ -220,12 +260,14 @@ document.querySelector('#add-1-perrico').addEventListener('click', async functio
 document.querySelector('#add-1-perrico-start').addEventListener('click', async function () {
     await list.addDogStart(selectedBreed);
     list.applyFilter();
+    createBreedButtons();
     console.log('click');
 });
   //listener para el botón de añadir 5 perros
 document.querySelector('#add-5-perricos').addEventListener('click', async function () {
     await list.addFiveDog(selectedBreed); //esto hace que se ejecuten todas las llamadas a la función a la vez, y que no siga l código hasta que todas se ejecuten
     list.applyFilter(); //aplica los filtros y luego renderiza
+    createBreedButtons();
 });
 
 document.querySelector('#like-filter').addEventListener('click', function(){
@@ -240,9 +282,8 @@ document.querySelector('#dislike-filter').addEventListener('click', function(){
 
 console.log(list.breedsCount);
 
-//asegurarme de que en todas las creaciones de perro se actualicen breesdCount
 //usar un método para crear botones de filtro 
 //metodo al  qu el pase raza y numero y haga un botón
 //metodo con un for que llame a crear botones
 //añadir addevent listener del botón de razas, añadir la raza al array, añadir  y quitar 
-//luego de clickar llamar a apply filter  
+//luego de clickar llamar a apply filter
