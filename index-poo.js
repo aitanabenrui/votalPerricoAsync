@@ -89,7 +89,7 @@ class DogList { //maneja una lista de perros y permite agregar, mostrar y filtra
             if(this.filtersApplied.dislike && !dog.isFeisimo()) return false;
 
             //filtrar por raza
-            if(this.filtersApplied.breeds.length > 0 && this.filtersApplied.breeds.includes(dog.breed))
+            if(this.filtersApplied.breeds.length > 0 && !this.filtersApplied.breeds.includes(dog.breed))
                 return false;
 
             return true;
@@ -114,16 +114,6 @@ class DogList { //maneja una lista de perros y permite agregar, mostrar y filtra
             document.querySelector('#dislike-filter').classList.remove('blue');
         }
         this.applyFilter();
-    }
-
-    setBreedFilter(breed){ //añade o elimina razas del filtro al array breed[]
-        if(this.filtersApplied.breeds.includes(breed)){
-            this.filtersApplied.breeds = this.filtersApplied.breeds.filter((iBreed)=>{
-                iBreed !== breed;
-            })
-        } else {
-            this.filtersApplied.breeds.push(breed);
-        }
     }
 
     //metodo para añadir al principio
@@ -177,11 +167,12 @@ class DogList { //maneja una lista de perros y permite agregar, mostrar y filtra
     toggleBreedFilter(breed){
         if(this.filtersApplied.breeds.includes(breed)){
             this.filtersApplied.breeds = this.filtersApplied.breeds.filter((raza)=>{
-                raza != breed
+                return raza != breed
             })
         } else {
             this.filtersApplied.breeds.push(breed);
         }
+        this.applyFilter();
     }
 }
 
@@ -224,17 +215,18 @@ const createBreedButtons = () =>{
     const breedFilterButtons = document.querySelector('#breed-filter');
     breedFilterButtons.innerHTML = ''; //limpia el html y regenera los botones de raza
     for(let breed in list.breedsCount){
-        button = document.createElement('button');
+        let button = document.createElement('button');
         button.id = `filter-${breed}`;
         button.innerHTML = `${breed} (<span id="counter-${breed}">${list.breedsCount[breed]}</span>)`; 
-        button.addEventListener('click', ()=> {
-            list.toggleBreedFilter(breed)}); //llama a la función toggleBreedFilter
-        if(list.filtersApplied.breeds.includes(breed)){
-            button.classList.add('blue');
-        } else{
-            button.classList.remove('blue');
-        }
         breedFilterButtons.appendChild(button);
+        button.addEventListener('click', ()=> {
+            list.toggleBreedFilter(breed);
+            if(list.filtersApplied.breeds.includes(breed)){
+                button.classList.add('blue');
+            } else{
+                button.classList.remove('blue');
+            }
+        }); //llama a la función toggleBreedFilter
     }
 };
 
